@@ -1,0 +1,42 @@
+def solveNQueens(n):
+    result = []
+
+    def backtrack(row, cols, diagonals, anti_diagonals, board):
+        if row == n:
+            # Found a valid board
+            result.append(board[:])
+            return
+        
+        for col in range(n):
+            diag = row - col
+            anti_diag = row + col
+            # Check if column or diagonal is already occupied
+            if col in cols or diag in diagonals or anti_diag in anti_diagonals:
+                continue
+            
+            # Place queen
+            cols.add(col)
+            diagonals.add(diag)
+            anti_diagonals.add(anti_diag)
+            row_str = '.' * col + 'Q' + '.' * (n - col - 1)
+            board.append(row_str)
+
+            # Recurse to next row
+            backtrack(row + 1, cols, diagonals, anti_diagonals, board)
+
+            # Backtrack
+            board.pop()
+            cols.remove(col)
+            diagonals.remove(diag)
+            anti_diagonals.remove(anti_diag)
+
+    backtrack(0, set(), set(), set(), [])
+    return result
+
+# Example usage
+n = 4
+solutions = solveNQueens(n)
+for sol in solutions:
+    for row in sol:
+        print(row)
+    print()
